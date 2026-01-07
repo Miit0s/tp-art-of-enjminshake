@@ -29,6 +29,7 @@ public:
 	
 	std::vector<sf::Vector2i>		walls;
 	std::vector<sf::RectangleShape> wallSprites;
+	std::vector<Entity*> entities;
 
 	ParticleMan beforeParts;
 	ParticleMan afterParts;
@@ -38,6 +39,9 @@ public:
 	void cacheWalls();
 
 	void processInput(sf::Event ev);
+	void processCollision();
+	void processEntityUpdate();
+
 	bool wasPressed = false;
 	void pollInput(double dt);
 	void onSpacePressed();

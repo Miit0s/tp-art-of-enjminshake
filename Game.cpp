@@ -40,6 +40,8 @@ Game::Game(sf::RenderWindow * win) {
 	walls.push_back(Vector2i(cols >>2, lastLine - 4));
 	walls.push_back(Vector2i((cols >> 2) + 1, lastLine - 4));
 	cacheWalls();
+
+	entities.push_back(&player);
 }
 
 void Game::cacheWalls()
@@ -79,15 +81,17 @@ void Game::pollInput(double dt) {
 	float lateralSpeed = 8.0;
 	float maxSpeed = 40.0;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q)) {
-		player.dx -= player.SPEED;
+		player.dx -= player.speed;
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
-		player.dx += player.SPEED;
+		player.dx += player.speed;
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
-
+		if (player.is_on_ground) {
+			player.dy -= player.jump_force;
+		}
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::T)) {
@@ -119,14 +123,14 @@ int blendModeIndex(sf::BlendMode bm) {
 
 void Game::update(double dt) {
 	pollInput(dt);
+	processCollision();
+	processEntityUpdate();
 
 	g_time += dt;
 	if (bgShader) bgShader->update(dt);
 
 	beforeParts.update(dt);
 	afterParts.update(dt);
-
-	player.update();
 }
 
  void Game::draw(sf::RenderWindow & win) {
@@ -174,3 +178,43 @@ void Game::im()
 
 }
 
+void Game::processCollision() {
+	for (Entity* entity_ptr : entities) {
+		Entity& entity = *entity_ptr;
+
+		if (!entity.can_collide) { continue; }
+
+		entity.is_colliding_on_x = false;
+		entity.is_colliding_on_y = false;
+
+		//Collision Sol
+		if (entity.dy >= 0 && isWall(entity.cx, entity.cy + 1)) { 
+			entity.is_colliding_on_y = true;
+			entity.yr = 0;
+		}
+
+		//Collision Plafond
+		if (entity.dy < 0 && isWall(entity.cx, entity.cy - 1)) { 
+			entity.is_colliding_on_y = true; 
+			entity.yr = 0;
+		}
+
+		//Collision mur
+		if (entity.dx > 0 && isWall(entity.cx + 1, entity.cy)) { 
+			entity.is_colliding_on_x = true; 
+			entity.xr = 0;
+		}
+		if (entity.dx < 0 && isWall(entity.cx - 1, entity.cy)) { 
+			entity.is_colliding_on_x = true;
+			entity.xr = 0;
+		}
+	}
+}
+
+void Game::processEntityUpdate() {
+	for (Entity* entity_ptr : entities) {
+		Entity& entity = *entity_ptr;
+
+		entity.update();
+	}
+}
