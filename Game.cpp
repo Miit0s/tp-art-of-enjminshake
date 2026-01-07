@@ -89,8 +89,8 @@ void Game::pollInput(double dt) {
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
-		if (player.is_on_ground) {
-			player.dy -= player.jump_force;
+		if (player.isOnGround) {
+			player.dy -= player.jumpForce;
 		}
 	}
 
@@ -133,6 +133,7 @@ void Game::update(double dt) {
 	afterParts.update(dt);
 
 	TrackPlayerStats();
+	ManageLevelEditor();
 }
 
  void Game::draw(sf::RenderWindow & win) {
@@ -159,6 +160,10 @@ void Game::update(double dt) {
 	afterParts.draw(win);
 
 	player.drawn(win);
+
+	if (showLevelEditorWindows) {
+		levelEditor.drawLevelEditorGui();
+	}
 }
 
 void Game::onSpacePressed() {
@@ -184,30 +189,30 @@ void Game::processCollision() {
 	for (Entity* entity_ptr : entities) {
 		Entity& entity = *entity_ptr;
 
-		if (!entity.can_collide) { continue; }
+		if (!entity.canCollide) { continue; }
 
-		entity.is_colliding_on_x = false;
-		entity.is_colliding_on_y = false;
+		entity.isCollidingOnX = false;
+		entity.isCollidingOnY = false;
 
 		//Collision Sol
 		if (entity.dy >= 0 && isWall(entity.cx, entity.cy + 1)) { 
-			entity.is_colliding_on_y = true;
+			entity.isCollidingOnY = true;
 			entity.yr = 0;
 		}
 
 		//Collision Plafond
 		if (entity.dy < 0 && isWall(entity.cx, entity.cy - 1)) { 
-			entity.is_colliding_on_y = true; 
+			entity.isCollidingOnY = true; 
 			entity.yr = 0;
 		}
 
 		//Collision mur
 		if (entity.dx > 0 && isWall(entity.cx + 1, entity.cy)) { 
-			entity.is_colliding_on_x = true; 
+			entity.isCollidingOnX = true; 
 			entity.xr = 0;
 		}
 		if (entity.dx < 0 && isWall(entity.cx - 1, entity.cy)) { 
-			entity.is_colliding_on_x = true;
+			entity.isCollidingOnX = true;
 			entity.xr = 0;
 		}
 	}
@@ -226,7 +231,21 @@ void Game::TrackPlayerStats() {
 	if (ImGui::CollapsingHeader("Player")) {
 		ImGui::LabelText("Player X Pos", "%i", player.cx);
 		ImGui::LabelText("Player Y Pos", "%i", player.cy);
+		ImGui::LabelText("Player X Ratio", "%i", player.xr);
+		ImGui::LabelText("Player Y Ratio", "%i", player.yr);
 		ImGui::LabelText("Player X Speed", "%f", player.dx);
 		ImGui::LabelText("Player Y Pos", "%f", player.dy);
+		if (ImGui::Button("Reset Player Position")) {
+			player.cx = 0;
+			player.cy = 0;
+		}
+	}
+}
+
+void Game::ManageLevelEditor() {
+	if (ImGui::CollapsingHeader("Level Editor")) {
+		if (ImGui::Button("Open Level Editor")) {
+			showLevelEditorWindows = !showLevelEditorWindows;
+		}
 	}
 }

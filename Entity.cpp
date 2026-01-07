@@ -12,24 +12,24 @@ Entity::~Entity()
 }
 
 void Entity::update() {
-	if (!is_on_ground && apply_gravity) { dy += gravity; }
+	if (!isOnGround && applyGravity) { dy += gravity; }
 
-	if (dy > max_fall_speed) { dy = max_fall_speed; }
+	if (dy > maxFallSpeed) { dy = maxFallSpeed; }
 
 	dx *= 0.96;
 
-	if (is_colliding_on_x) {
+	if (isCollidingOnX) {
 		dx = 0;
 	}
 
-	if (is_colliding_on_y) {
+	if (isCollidingOnY) {
 		//Si le joueur est en train de tomber
-		if (dy > 0) { is_on_ground = true; }
+		if (dy > 0) { isOnGround = true; }
 
 		dy = 0;
 	}
 	else {
-		is_on_ground = false;
+		isOnGround = false;
 	}
 
 	xr += dx;
@@ -41,8 +41,8 @@ void Entity::update() {
 	while (yr > 1) { yr--;	cy++; }
 	while (yr < 0) { yr++;	cy--; }
 
-	xx = (int)(cx + xr) * 16;
-	yy = (int)(cy + yr) * 16;
+	xx = (cx + xr) * 16;
+	yy = (cy + yr) * 16;
 
 	sprite.setPosition(xx, yy);
 }

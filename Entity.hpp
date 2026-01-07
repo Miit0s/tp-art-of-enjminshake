@@ -26,19 +26,19 @@ public:
 	float xr{};
 	float yr{};
 
-	float speed{ 0.01 };
-	float jump_force{ 0.7 };
+	float speed{ 0.001 };
+	float jumpForce{ 0.12 };
 
 	//Gravity
-	bool apply_gravity{ true };
-	float gravity{ 0.01f };
-	float max_fall_speed{ 0.5f };
-	bool is_on_ground{ false };
+	bool applyGravity{ true };
+	float gravity{ 0.001f };
+	float maxFallSpeed{ 0.05f };
+	bool isOnGround{ false };
 
 	//Collision
-	bool can_collide{ true };
-	bool is_colliding_on_x{ false };
-	bool is_colliding_on_y{ false };
+	bool canCollide{ true };
+	bool isCollidingOnX{ false };
+	bool isCollidingOnY{ false };
 
 private:
 	// Resulting coordinates

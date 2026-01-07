@@ -12,6 +12,7 @@
 #include "ParticleMan.hpp"
 
 #include "Entity.hpp"
+#include "LevelEditor.hpp"
 
 using namespace sf;
 
@@ -56,5 +57,10 @@ public:
 private:
 	Entity player;
 
+	//Level Editor
+	LevelEditor levelEditor;
+	bool showLevelEditorWindows{ false };
+
 	void TrackPlayerStats();
+	void ManageLevelEditor();
 };
