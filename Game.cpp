@@ -131,6 +131,8 @@ void Game::update(double dt) {
 
 	beforeParts.update(dt);
 	afterParts.update(dt);
+
+	TrackPlayerStats();
 }
 
  void Game::draw(sf::RenderWindow & win) {
@@ -216,5 +218,15 @@ void Game::processEntityUpdate() {
 		Entity& entity = *entity_ptr;
 
 		entity.update();
+	}
+}
+
+
+void Game::TrackPlayerStats() {
+	if (ImGui::CollapsingHeader("Player")) {
+		ImGui::LabelText("Player X Pos", "%i", player.cx);
+		ImGui::LabelText("Player Y Pos", "%i", player.cy);
+		ImGui::LabelText("Player X Speed", "%f", player.dx);
+		ImGui::LabelText("Player Y Pos", "%f", player.dy);
 	}
 }

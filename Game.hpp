@@ -55,4 +55,6 @@ public:
 
 private:
 	Entity player;
+
+	void TrackPlayerStats();
 };
