@@ -11,7 +11,7 @@ Entity::~Entity()
 {
 }
 
-void Entity::update() {
+void Entity::update(double deltaTime) {
 	if (!isOnGround && applyGravity) { dy += gravity; }
 
 	if (dy > maxFallSpeed) { dy = maxFallSpeed; }
@@ -32,8 +32,8 @@ void Entity::update() {
 		isOnGround = false;
 	}
 
-	xr += dx;
-	yr += dy;
+	xr += dx * deltaTime;
+	yr += dy * deltaTime;
 
 	while (xr > 1) { xr--;	cx++; }
 	while (xr < 0) { xr++;	cx--; }

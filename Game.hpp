@@ -41,7 +41,7 @@ public:
 
 	void processInput(sf::Event ev);
 	void processCollision();
-	void processEntityUpdate();
+	void processEntityUpdate(double deltaTime);
 
 	void updateLevel();
 

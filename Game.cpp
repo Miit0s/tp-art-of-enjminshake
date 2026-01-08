@@ -128,7 +128,7 @@ int blendModeIndex(sf::BlendMode bm) {
 void Game::update(double dt) {
 	pollInput(dt);
 	processCollision();
-	processEntityUpdate();
+	processEntityUpdate(dt);
 
 	g_time += dt;
 	if (bgShader) bgShader->update(dt);
@@ -223,11 +223,11 @@ void Game::processCollision() {
 	}
 }
 
-void Game::processEntityUpdate() {
+void Game::processEntityUpdate(double deltaTime) {
 	for (Entity* entity_ptr : entities) {
 		Entity& entity = *entity_ptr;
 
-		entity.update();
+		entity.update(deltaTime);
 	}
 }
 

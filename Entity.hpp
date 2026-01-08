@@ -11,7 +11,7 @@ public:
 
 	sf::RectangleShape sprite;
 
-	void update();
+	void update(double deltaTime);
 	void drawn(sf::RenderWindow& window);
 
 	// Movements
@@ -26,13 +26,13 @@ public:
 	float xr{};
 	float yr{};
 
-	float speed{ 0.001 };
-	float jumpForce{ 0.12 };
+	float speed{ 1 };
+	float jumpForce{ 50 };
 
 	//Gravity
 	bool applyGravity{ true };
-	float gravity{ 0.001f };
-	float maxFallSpeed{ 0.05f };
+	float gravity{ 0.1 };
+	float maxFallSpeed{ 50 };
 	bool isOnGround{ false };
 
 	//Collision
