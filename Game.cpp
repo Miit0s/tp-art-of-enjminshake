@@ -11,7 +11,7 @@
 static int cols = C::RES_X / C::GRID_SIZE;
 static int lastLine = C::RES_Y / C::GRID_SIZE - 1;
 
-Game::Game(sf::RenderWindow * win) {
+Game::Game(sf::RenderWindow* win) : levelEditor{ &walls } {
 	this->win = win;
 	bg = sf::RectangleShape(Vector2f((float)win->getSize().x, (float)win->getSize().y));
 
@@ -42,6 +42,10 @@ Game::Game(sf::RenderWindow * win) {
 	cacheWalls();
 
 	entities.push_back(&player);
+
+	levelEditor.applyChangeCallback = [this]() {
+		this->updateLevel();
+	};
 }
 
 void Game::cacheWalls()
@@ -132,8 +136,8 @@ void Game::update(double dt) {
 	beforeParts.update(dt);
 	afterParts.update(dt);
 
-	TrackPlayerStats();
-	ManageLevelEditor();
+	trackPlayerStats();
+	manageLevelEditor();
 }
 
  void Game::draw(sf::RenderWindow & win) {
@@ -162,7 +166,7 @@ void Game::update(double dt) {
 	player.drawn(win);
 
 	if (showLevelEditorWindows) {
-		levelEditor.drawLevelEditorGui();
+		levelEditor.drawLevelEditorGui(&showLevelEditorWindows);
 	}
 }
 
@@ -185,6 +189,7 @@ void Game::im()
 
 }
 
+//Not optimise, check all the wall in the vector with isWall. If lag, optimise that
 void Game::processCollision() {
 	for (Entity* entity_ptr : entities) {
 		Entity& entity = *entity_ptr;
@@ -227,7 +232,7 @@ void Game::processEntityUpdate() {
 }
 
 
-void Game::TrackPlayerStats() {
+void Game::trackPlayerStats() {
 	if (ImGui::CollapsingHeader("Player")) {
 		ImGui::LabelText("Player X Pos", "%i", player.cx);
 		ImGui::LabelText("Player Y Pos", "%i", player.cy);
@@ -242,10 +247,14 @@ void Game::TrackPlayerStats() {
 	}
 }
 
-void Game::ManageLevelEditor() {
+void Game::manageLevelEditor() {
 	if (ImGui::CollapsingHeader("Level Editor")) {
 		if (ImGui::Button("Open Level Editor")) {
 			showLevelEditorWindows = !showLevelEditorWindows;
 		}
 	}
+}
+
+void Game::updateLevel() {
+	Game::cacheWalls();
 }

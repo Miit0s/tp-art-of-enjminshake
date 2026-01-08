@@ -41,8 +41,8 @@ void Entity::update() {
 	while (yr > 1) { yr--;	cy++; }
 	while (yr < 0) { yr++;	cy--; }
 
-	xx = (cx + xr) * 16;
-	yy = (cy + yr) * 16;
+	xx = (cx + xr) * C::GRID_SIZE;
+	yy = (cy + yr) * C::GRID_SIZE;
 
 	sprite.setPosition(xx, yy);
 }

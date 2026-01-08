@@ -43,6 +43,8 @@ public:
 	void processCollision();
 	void processEntityUpdate();
 
+	void updateLevel();
+
 	bool wasPressed = false;
 	void pollInput(double dt);
 	void onSpacePressed();
@@ -61,6 +63,6 @@ private:
 	LevelEditor levelEditor;
 	bool showLevelEditorWindows{ false };
 
-	void TrackPlayerStats();
-	void ManageLevelEditor();
+	void trackPlayerStats();
+	void manageLevelEditor();
 };
