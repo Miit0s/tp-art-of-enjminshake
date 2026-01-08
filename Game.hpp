@@ -12,6 +12,7 @@
 #include "ParticleMan.hpp"
 
 #include "Entity.hpp"
+#include "Enemy.hpp"
 #include "LevelEditor.hpp"
 
 using namespace sf;
@@ -30,7 +31,11 @@ public:
 	
 	std::vector<sf::Vector2i>		walls;
 	std::vector<sf::RectangleShape> wallSprites;
+
 	std::vector<Entity*> entities;
+
+	std::vector<sf::Vector2i> enemiesSpawnPoint;
+	std::vector<Enemy*> enemies;
 
 	ParticleMan beforeParts;
 	ParticleMan afterParts;
@@ -57,6 +62,7 @@ public:
 	void im();
 
 private:
+	sf::Vector2i playerSpawnPoint;
 	Entity player;
 
 	//Level Editor
@@ -65,4 +71,5 @@ private:
 
 	void trackPlayerStats();
 	void manageLevelEditor();
+	void spawnEnemies();
 };

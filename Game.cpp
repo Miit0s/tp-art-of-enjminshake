@@ -27,6 +27,7 @@ Game::Game(sf::RenderWindow* win) : levelEditor{ &walls } {
 	for (int i = 0; i < C::RES_X / C::GRID_SIZE; ++i) 
 		walls.push_back( Vector2i(i, lastLine) );
 
+	//Walls Setup
 	walls.push_back(Vector2i(0, lastLine-1));
 	walls.push_back(Vector2i(0, lastLine-2));
 	walls.push_back(Vector2i(0, lastLine-3));
@@ -41,7 +42,18 @@ Game::Game(sf::RenderWindow* win) : levelEditor{ &walls } {
 	walls.push_back(Vector2i((cols >> 2) + 1, lastLine - 4));
 	cacheWalls();
 
+	//Player Setup
+	playerSpawnPoint = sf::Vector2i{ 10, lastLine - 1 };
+	player.cx = playerSpawnPoint.x;
+	player.cy = playerSpawnPoint.y;
+
 	entities.push_back(&player);
+
+	//Enemies Setup
+	enemiesSpawnPoint.push_back(Vector2i(70, 0));
+	enemiesSpawnPoint.push_back(Vector2i(75, 0));
+
+	spawnEnemies();
 
 	levelEditor.applyChangeCallback = [this]() {
 		this->updateLevel();
@@ -163,7 +175,11 @@ void Game::update(double dt) {
 
 	afterParts.draw(win);
 
-	player.drawn(win);
+	for (Entity* entity_ptr : entities) {
+		Entity& entity = *entity_ptr;
+
+		entity.drawn(win);
+	}
 
 	if (showLevelEditorWindows) {
 		levelEditor.drawLevelEditorGui(&showLevelEditorWindows);
@@ -229,6 +245,26 @@ void Game::processEntityUpdate(double deltaTime) {
 
 		entity.update(deltaTime);
 	}
+
+	for (Enemy* enemy_ptr : enemies) {
+		Enemy& enemy = *enemy_ptr;
+
+		enemy.update(deltaTime);
+	}
+}
+
+void Game::spawnEnemies() {
+	for (Enemy* enemy_ptr : enemies) delete enemy_ptr;
+	enemies.clear();
+
+	for (sf::Vector2i position : enemiesSpawnPoint) {
+		Enemy* newEnemy = new Enemy{};
+		newEnemy->cx = position.x;
+		newEnemy->cy = position.y;
+
+		enemies.push_back(newEnemy);
+		entities.push_back(newEnemy);
+	}
 }
 
 
@@ -241,8 +277,8 @@ void Game::trackPlayerStats() {
 		ImGui::LabelText("Player X Speed", "%f", player.dx);
 		ImGui::LabelText("Player Y Pos", "%f", player.dy);
 		if (ImGui::Button("Reset Player Position")) {
-			player.cx = 0;
-			player.cy = 0;
+			player.cx = playerSpawnPoint.x;
+			player.cy = playerSpawnPoint.y;
 		}
 	}
 }
@@ -257,4 +293,5 @@ void Game::manageLevelEditor() {
 
 void Game::updateLevel() {
 	Game::cacheWalls();
+	Game::spawnEnemies();
 }
