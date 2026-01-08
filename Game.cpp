@@ -11,7 +11,7 @@
 static int cols = C::RES_X / C::GRID_SIZE;
 static int lastLine = C::RES_Y / C::GRID_SIZE - 1;
 
-Game::Game(sf::RenderWindow* win) : levelEditor{ &walls } {
+Game::Game(sf::RenderWindow* win) : levelEditor{ &walls, &enemiesSpawnPoint, &playerSpawnPoint } {
 	this->win = win;
 	bg = sf::RectangleShape(Vector2f((float)win->getSize().x, (float)win->getSize().y));
 
@@ -44,8 +44,7 @@ Game::Game(sf::RenderWindow* win) : levelEditor{ &walls } {
 
 	//Player Setup
 	playerSpawnPoint = sf::Vector2i{ 10, lastLine - 1 };
-	player.cx = playerSpawnPoint.x;
-	player.cy = playerSpawnPoint.y;
+	playerResetPosition();
 
 	entities.push_back(&player);
 
@@ -138,9 +137,11 @@ int blendModeIndex(sf::BlendMode bm) {
 };
 
 void Game::update(double dt) {
-	pollInput(dt);
-	processCollision();
-	processEntityUpdate(dt);
+	if (!showLevelEditorWindows) {
+		pollInput(dt);
+		processCollision();
+		processEntityUpdate(dt);
+	}
 
 	g_time += dt;
 	if (bgShader) bgShader->update(dt);
@@ -257,6 +258,9 @@ void Game::spawnEnemies() {
 	for (Enemy* enemy_ptr : enemies) delete enemy_ptr;
 	enemies.clear();
 
+	entities.clear();
+	entities.push_back(&player);
+
 	for (sf::Vector2i position : enemiesSpawnPoint) {
 		Enemy* newEnemy = new Enemy{};
 		newEnemy->cx = position.x;
@@ -265,6 +269,11 @@ void Game::spawnEnemies() {
 		enemies.push_back(newEnemy);
 		entities.push_back(newEnemy);
 	}
+}
+
+void Game::playerResetPosition() {
+	player.cx = playerSpawnPoint.x;
+	player.cy = playerSpawnPoint.y;
 }
 
 
@@ -277,8 +286,7 @@ void Game::trackPlayerStats() {
 		ImGui::LabelText("Player X Speed", "%f", player.dx);
 		ImGui::LabelText("Player Y Pos", "%f", player.dy);
 		if (ImGui::Button("Reset Player Position")) {
-			player.cx = playerSpawnPoint.x;
-			player.cy = playerSpawnPoint.y;
+			playerResetPosition();
 		}
 	}
 }
@@ -292,6 +300,7 @@ void Game::manageLevelEditor() {
 }
 
 void Game::updateLevel() {
-	Game::cacheWalls();
-	Game::spawnEnemies();
+	cacheWalls();
+	spawnEnemies();
+	playerResetPosition();
 }

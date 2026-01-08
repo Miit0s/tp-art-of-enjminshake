@@ -8,7 +8,7 @@
 class LevelEditor
 {
 public:
-	LevelEditor(std::vector<sf::Vector2i>* walls);
+	LevelEditor(std::vector<sf::Vector2i>* wallsPosition, std::vector<sf::Vector2i>* enemiesSpawnPoint, sf::Vector2i* playerSpawn);
 	~LevelEditor();
 
 	void drawLevelEditorGui(bool* ptrOpen);
@@ -26,7 +26,9 @@ private:
 	ImU32 enemySpawnColor{};
 
 	//LevelInfo
-	std::vector<sf::Vector2i>* walls;
+	std::vector<sf::Vector2i>* wallsPosition;
+	std::vector<sf::Vector2i>* enemiesSpawnPoint;
+	sf::Vector2i* playerSpawnPoint;
 
 	enum ToolType {
 		wall,
@@ -38,5 +40,6 @@ private:
 	std::string getToolName(ToolType toolType);
 
 	void manageMouseClick(int x, int y);
+	void drawLevelSquare(int gridX, int gridY, ImVec2 gridTopLeft, ImDrawList* drawList, ImU32 squareColor);
 };
 

@@ -2,9 +2,11 @@
 
 #include "C.hpp"
 
-LevelEditor::LevelEditor(std::vector<sf::Vector2i>* walls)
+LevelEditor::LevelEditor(std::vector<sf::Vector2i>* wallsPosition, std::vector<sf::Vector2i>* enemiesSpawnPoint, sf::Vector2i* playerSpawn)
 {
-	this->walls = walls;
+	this->wallsPosition = wallsPosition;
+	this->enemiesSpawnPoint = enemiesSpawnPoint;
+	this->playerSpawnPoint = playerSpawn;
 
 	wallColor = IM_COL32(255, 255, 255, 255);
 	playerSpawnColor = IM_COL32(0, 255, 0, 255);
@@ -52,13 +54,13 @@ void LevelEditor::drawLevelEditorGui(bool* ptrOpen) {
 		drawList->PopClipRect();
 
 		//Draw Current Level
-		for (sf::Vector2i wall : *walls) {
-			drawList->AddRectFilled(
-				ImVec2{ wall.x * cellSize + canvasTopLeft.x, wall.y * cellSize + canvasTopLeft.y }, 
-				ImVec2{ wall.x * cellSize + cellSize + canvasTopLeft.x, wall.y * cellSize + cellSize + canvasTopLeft.y }, 
-				wallColor
-			);
+		for (sf::Vector2i wall : *wallsPosition) {
+			drawLevelSquare(wall.x, wall.y, canvasTopLeft, drawList, wallColor);
 		}
+		for (sf::Vector2i enemies : *enemiesSpawnPoint) {
+			drawLevelSquare(enemies.x, enemies.y, canvasTopLeft, drawList, enemySpawnColor);
+		}
+		drawLevelSquare(playerSpawnPoint->x, playerSpawnPoint->y, canvasTopLeft, drawList, playerSpawnColor);
 
 		//Button
 		ImGui::SetCursorScreenPos(ImVec2(origin.x, canvasBottomRight.y + padding));
@@ -97,7 +99,7 @@ void LevelEditor::manageMouseClick(int x, int y) {
 		{
 			bool wallExists = false;
 
-			for (sf::Vector2i wall : *walls) {
+			for (sf::Vector2i wall : *wallsPosition) {
 				if (wall.x == x && wall.y == y) {
 					wallExists = true;
 					break;
@@ -105,23 +107,49 @@ void LevelEditor::manageMouseClick(int x, int y) {
 			}
 
 			if (!wallExists) {
-				walls->push_back(sf::Vector2i(x, y));
+				wallsPosition->push_back(sf::Vector2i(x, y));
 			}
 		}
 		break;
 	case LevelEditor::playerSpawn:
+		playerSpawnPoint->x = x;
+		playerSpawnPoint->y = y;
 		break;
 	case LevelEditor::enemySpawn:
+	{
+		bool enemyExists = false;
+
+		for (sf::Vector2i enemy : *enemiesSpawnPoint) {
+			if (enemy.x == x && enemy.y == y) {
+				enemyExists = true;
+				break;
+			}
+		}
+
+		if (!enemyExists) {
+			enemiesSpawnPoint->push_back(sf::Vector2i(x, y));
+		}
+	}
 		break;
 	case LevelEditor::ereaser:
 		{
-			for (auto wallPtr = walls->begin(); wallPtr != walls->end();) {
+			for (auto wallPtr = wallsPosition->begin(); wallPtr != wallsPosition->end();) {
 				if (wallPtr->x == x && wallPtr->y == y) {
-					wallPtr = walls->erase(wallPtr);
+					wallPtr = wallsPosition->erase(wallPtr);
 					break;
 				}
 				else {
 					++wallPtr;
+				}
+			}
+
+			for (auto enemyPtr = enemiesSpawnPoint->begin(); enemyPtr != enemiesSpawnPoint->end();) {
+				if (enemyPtr->x == x && enemyPtr->y == y) {
+					enemyPtr = enemiesSpawnPoint->erase(enemyPtr);
+					break;
+				}
+				else {
+					++enemyPtr;
 				}
 			}
 		}
@@ -129,4 +157,12 @@ void LevelEditor::manageMouseClick(int x, int y) {
 	default:
 		break;
 	}
+}
+
+void LevelEditor::drawLevelSquare(int gridX, int gridY, ImVec2 gridTopLeft, ImDrawList* drawList, ImU32 squareColor) {
+	drawList->AddRectFilled(
+		ImVec2{ gridX * cellSize + gridTopLeft.x, gridY * cellSize + gridTopLeft.y },
+		ImVec2{ gridX * cellSize + cellSize + gridTopLeft.x, gridY * cellSize + cellSize + gridTopLeft.y },
+		squareColor
+	);
 }
