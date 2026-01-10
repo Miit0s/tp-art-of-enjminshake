@@ -169,6 +169,7 @@
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="HotReloadShader.cpp" />
+    <ClCompile Include="JsonSerializationTool.cpp" />
     <ClCompile Include="LevelEditor.cpp" />
     <ClCompile Include="Lib.cpp" />
     <ClCompile Include="libs\imgui-sfml\imgui-SFML.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="HotReloadShader.hpp" />
     <ClInclude Include="Interp.hpp" />
+    <ClInclude Include="JsonSerializationTool.hpp" />
     <ClInclude Include="LevelEditor.hpp" />
     <ClInclude Include="Lib.hpp" />
     <ClInclude Include="libs\imgui-sfml\imgui-SFML.h" />

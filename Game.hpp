@@ -14,6 +14,7 @@
 #include "Entity.hpp"
 #include "Enemy.hpp"
 #include "LevelEditor.hpp"
+#include "JsonSerializationTool.hpp"
 
 using namespace sf;
 
@@ -68,6 +69,9 @@ private:
 	//Level Editor
 	LevelEditor levelEditor;
 	bool showLevelEditorWindows{ false };
+
+	JsonSerializationTool jsonTool{};
+	std::string levelPath = "LevelSave/mainLevel.json";
 
 	void trackPlayerStats();
 	void manageLevelEditor();
