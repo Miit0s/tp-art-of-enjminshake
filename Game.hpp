@@ -11,7 +11,7 @@
 #include "Particle.hpp"
 #include "ParticleMan.hpp"
 
-#include "Entity.hpp"
+#include "Player.hpp"
 #include "Enemy.hpp"
 #include "LevelEditor.hpp"
 #include "JsonSerializationTool.hpp"
@@ -64,7 +64,7 @@ public:
 
 private:
 	sf::Vector2i playerSpawnPoint;
-	Entity player;
+	Player player;
 
 	//Level Editor
 	LevelEditor levelEditor;

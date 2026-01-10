@@ -50,6 +50,8 @@ Game::Game(sf::RenderWindow* win) : levelEditor{ &walls, &enemiesSpawnPoint, &pl
 
 	////Player Setup
 	//playerSpawnPoint = sf::Vector2i{ 10, lastLine - 1 };
+	player.wallsPosition = &walls;
+	player.enemies = &enemies;
 	playerResetPosition();
 
 	entities.push_back(&player);
@@ -116,7 +118,7 @@ void Game::pollInput(double dt) {
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::T)) {
-
+		player.shoot();
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
 		if (!wasPressed) {
@@ -147,6 +149,7 @@ void Game::update(double dt) {
 		pollInput(dt);
 		processCollision();
 		processEntityUpdate(dt);
+		player.update(dt);
 	}
 
 	g_time += dt;
@@ -182,6 +185,7 @@ void Game::update(double dt) {
 
 	afterParts.draw(win);
 
+	player.drawn(win);
 	for (Entity* entity_ptr : entities) {
 		Entity& entity = *entity_ptr;
 
