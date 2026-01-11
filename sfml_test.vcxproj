@@ -181,6 +181,7 @@
     <ClCompile Include="ParticleMan.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="sys.cpp" />
+    <ClCompile Include="TweenMaker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app.h" />
@@ -202,6 +203,8 @@
     <ClInclude Include="ParticleMan.hpp" />
     <ClInclude Include="Player.hpp" />
     <ClInclude Include="sys.hpp" />
+    <ClInclude Include="Tween.hpp" />
+    <ClInclude Include="TweenMaker.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

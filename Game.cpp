@@ -65,6 +65,8 @@ Game::Game(sf::RenderWindow* win) : levelEditor{ &walls, &enemiesSpawnPoint, &pl
 	levelEditor.applyChangeCallback = [this]() {
 		this->updateLevel();
 	};
+
+	tweenMaker = TweenMaker::getInstance();
 }
 
 void Game::cacheWalls()
@@ -92,6 +94,10 @@ void Game::processInput(sf::Event ev) {
 			cacheWalls();
 		}
 	}
+
+	if (ev.type == sf::Event::MouseButtonPressed && ev.mouseButton.button == sf::Mouse::Left) {
+		player.shoot();
+	}
 }
 
 
@@ -118,7 +124,7 @@ void Game::pollInput(double dt) {
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::T)) {
-		player.shoot();
+		
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
 		if (!wasPressed) {
@@ -129,7 +135,6 @@ void Game::pollInput(double dt) {
 	else {
 		wasPressed = false;
 	}
-
 }
 
 static sf::VertexArray va;
@@ -149,7 +154,10 @@ void Game::update(double dt) {
 		pollInput(dt);
 		processCollision();
 		processEntityUpdate(dt);
+
 		player.update(dt);
+
+		tweenMaker->update(dt);
 	}
 
 	g_time += dt;

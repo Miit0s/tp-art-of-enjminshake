@@ -10,6 +10,7 @@
 
 #include "Particle.hpp"
 #include "ParticleMan.hpp"
+#include "TweenMaker.hpp"
 
 #include "Player.hpp"
 #include "Enemy.hpp"
@@ -77,4 +78,6 @@ private:
 	void manageLevelEditor();
 	void spawnEnemies();
 	void playerResetPosition();
+
+	TweenMaker* tweenMaker;
 };

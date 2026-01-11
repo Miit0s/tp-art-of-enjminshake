@@ -2,6 +2,7 @@
 
 #include "Entity.hpp"
 #include "Enemy.hpp"
+#include "TweenMaker.hpp"
 
 class Player :
     public Entity
@@ -20,12 +21,14 @@ private:
     int maxLaserRange{ 100 };
 
     bool haveToShoot{ false };
-    std::vector<sf::RectangleShape> lasersSprite;
+    std::list<sf::RectangleShape> lasersSprite;
 
     enum Direction {
         left,
         right
     };
     Direction currentDirection{ right };
+
+    TweenMaker* tweenMaker;
 };
 
