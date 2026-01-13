@@ -55,7 +55,9 @@ void TweenMaker::update(double deltaTime) {
 
     for (auto tweenPtr = activeTweens.begin(); tweenPtr != activeTweens.end();) {
         if (tweenPtr->isFinished) {
-            tweenPtr->tweenFinishCallback();
+
+            if (tweenPtr->tweenFinishCallback) tweenPtr->tweenFinishCallback();
+            
             tweenPtr = activeTweens.erase(tweenPtr);
         }
         else {

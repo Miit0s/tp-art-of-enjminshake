@@ -16,7 +16,7 @@ void Entity::update(double deltaTime) {
 
 	if (dy > maxFallSpeed) { dy = maxFallSpeed; }
 
-	dx *= 0.96;
+	dx *= friction;
 
 	if (isCollidingOnX) {
 		dx = 0;

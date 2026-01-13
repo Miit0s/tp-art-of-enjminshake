@@ -18,6 +18,8 @@ public:
 	float dx{};
 	float dy{};
 
+	float friction{ 0.96 };
+
 	// Grid Coordinate
 	int cx{};
 	int cy{};

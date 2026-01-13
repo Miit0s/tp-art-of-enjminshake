@@ -8,6 +8,9 @@ class Player :
     public Entity
 {
 public:
+    Player();
+    ~Player();
+
     void update(double deltaTime);
     void drawn(sf::RenderWindow& window);
 

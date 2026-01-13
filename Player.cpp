@@ -1,5 +1,13 @@
 #include "Player.hpp"
 
+Player::Player() {
+	tweenMaker = TweenMaker::getInstance();
+}
+
+Player::~Player()
+{
+}
+
 void Player::shoot() {
 	if (haveToShoot) { return; }
 
@@ -32,9 +40,11 @@ void Player::update(double deltaTime) {
 			if (hitFound) break;
 
 			for (Enemy* enemy : *enemies) {
-				if (enemy->cx == checkX && enemy->cy == startPosition.y) {
-					hitPosition.x = checkX + enemy->xr;
+				if (enemy->cx == checkX && enemy->cy == startPosition.y && !enemy->isDead) {
+					hitPosition.x = checkX;
+					hitPosition.x += (currentDirection == left) ? -1 : 2;
 					hitFound = true;
+					enemy->hit();
 					break;
 				}
 			}
@@ -57,8 +67,6 @@ void Player::update(double deltaTime) {
 			createdLaser.setPosition((hitPosition.x + 1) * C::GRID_SIZE, startPosition.y * C::GRID_SIZE + yOffset);
 
 		createdLaser.setFillColor(sf::Color{ 255, 20, 20, 255 });
-
-		tweenMaker = TweenMaker::getInstance();
 
 		Tween* tweenCreated = tweenMaker->startTween(&createdLaser, sf::Vector2{ distance * C::GRID_SIZE, 0.0f }, sf::Color{ 255, 255, 255, 0 }, 1);
 		auto laserIterator = std::prev(lasersSprite.end());

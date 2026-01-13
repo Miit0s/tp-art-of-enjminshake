@@ -10,7 +10,7 @@ private:
 
 	TweenMaker() {}
 
-	std::vector<Tween> activeTweens;
+	std::list<Tween> activeTweens;
 	
 public:
 	TweenMaker(const TweenMaker& obj) = delete;
