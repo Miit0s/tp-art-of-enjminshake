@@ -103,6 +103,10 @@ int main()
 			dt = 0.00000001;
 		}
 
+		if (dt > 0.1) {
+			dt = 0.1;
+		}
+
         sf::Event event;
 		while (window.pollEvent(event))//sort un evenement de la liste pour le traiter
 		{
