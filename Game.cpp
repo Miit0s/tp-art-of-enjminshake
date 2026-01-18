@@ -86,13 +86,17 @@ void Game::processInput(sf::Event ev) {
 		closing = true;
 		return;
 	}
-	if (ev.type == sf::Event::KeyReleased) {
+	if (ev.type == sf::Event::KeyPressed) {
 		int here = 0;
 		if (ev.key.code == Keyboard::K) {
 			int there = 0;
 			walls.clear();
 			cacheWalls();
 		}
+	}
+
+	if (ev.type == sf::Event::JoystickButtonPressed && ev.joystickButton.button == 5) {
+		player.shoot();
 	}
 
 	if (ev.type == sf::Event::MouseButtonPressed && ev.mouseButton.button == sf::Mouse::Left) {
@@ -107,25 +111,25 @@ static double g_tickTimer = 0.0;
 
 void Game::pollInput(double dt) {
 
-	float lateralSpeed = 8.0;
-	float maxSpeed = 40.0;
+	float deadzone = 20.0f;
+	int controllerID = 0;
+
+	float moveToAddToPlayer = 0;
+
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q)) {
-		player.dx -= player.speed;
+		moveToAddToPlayer = -player.speed;
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
-		player.dx += player.speed;
+		moveToAddToPlayer = player.speed;
 	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) || sf::Joystick::isButtonPressed(controllerID, 1)) {
 		if (player.isOnGround) {
 			player.dy -= player.jumpForce;
 		}
 	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::T)) {
-		
-	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
 		if (!wasPressed) {
 			onSpacePressed();
@@ -135,6 +139,15 @@ void Game::pollInput(double dt) {
 	else {
 		wasPressed = false;
 	}
+
+	if (sf::Joystick::isConnected(controllerID)) {
+		float xPos = sf::Joystick::getAxisPosition(controllerID, sf::Joystick::X);
+
+		if (xPos > deadzone) moveToAddToPlayer = player.speed * (abs(xPos) / 100);
+		if (xPos < -deadzone) moveToAddToPlayer = -(player.speed * (abs(xPos) / 100));
+	}
+
+	player.dx += moveToAddToPlayer;
 }
 
 static sf::VertexArray va;
