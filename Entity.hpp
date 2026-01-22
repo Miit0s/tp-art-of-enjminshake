@@ -42,6 +42,8 @@ public:
 	bool isCollidingOnX{ false };
 	bool isCollidingOnY{ false };
 
+	bool isDead{ false };
+
 private:
 	// Resulting coordinates
 	float xx{};

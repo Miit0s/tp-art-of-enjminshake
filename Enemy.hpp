@@ -11,8 +11,6 @@ public:
 	
 	void update(double deltaTime);
 
-	bool isDead{ false };
-
 	void hit();
 
 private:

@@ -34,7 +34,7 @@ public:
 	std::vector<sf::Vector2i>		walls;
 	std::vector<sf::RectangleShape> wallSprites;
 
-	std::vector<Entity*> entities;
+	std::list<Entity*> entities;
 
 	std::vector<sf::Vector2i> enemiesSpawnPoint;
 	std::vector<Enemy*> enemies;

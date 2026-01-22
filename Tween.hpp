@@ -13,6 +13,9 @@ struct Tween
 	sf::Color startColor;
 	sf::Color endColor;
 
+	sf::Vector2f startPosition;
+	sf::RectangleShape* movingEndPosition = nullptr;
+
 	double duration;
 	double timeElapsed{ 0 };
 

@@ -102,6 +102,19 @@ void Game::processInput(sf::Event ev) {
 	if (ev.type == sf::Event::MouseButtonPressed && ev.mouseButton.button == sf::Mouse::Left) {
 		player.shoot();
 	}
+
+	//Miss controller input
+
+	if (ev.type == sf::Event::MouseButtonPressed && ev.mouseButton.button == sf::Mouse::Right) {
+		HomingMissile* missile = player.shootMissile();
+		entities.push_back(missile);
+
+		//This is very wrong, but you say dirty code soooo
+		auto missileIterator = std::prev(entities.end());
+		missile->missileWillBeClear = [this, missileIterator]() {
+			this->entities.erase(missileIterator);
+		};
+	}
 }
 
 

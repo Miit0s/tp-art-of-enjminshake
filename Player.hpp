@@ -2,6 +2,7 @@
 
 #include "Entity.hpp"
 #include "Enemy.hpp"
+#include "HomingMissile.hpp"
 #include "TweenMaker.hpp"
 
 class Player :
@@ -15,6 +16,7 @@ public:
     void drawn(sf::RenderWindow& window);
 
     void shoot();
+    HomingMissile* shootMissile();
 
     std::vector<sf::Vector2i>* wallsPosition;
     std::vector<Enemy*>* enemies;
@@ -23,8 +25,8 @@ private:
     float laserHeight{ 0.5 };
     int maxLaserRange{ 100 };
 
-    bool haveToShoot{ false };
-    std::list<sf::RectangleShape> lasersSprite;
+    std::list<sf::RectangleShape> lasersSprite = {};
+    std::list<HomingMissile> homingMissiles = {};
 
     enum Direction {
         left,
