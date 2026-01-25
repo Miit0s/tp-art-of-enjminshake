@@ -11,7 +11,7 @@
 static int cols = C::RES_X / C::GRID_SIZE;
 static int lastLine = C::RES_Y / C::GRID_SIZE - 1;
 
-Game::Game(sf::RenderWindow* win) : levelEditor{ &walls, &enemiesSpawnPoint, &playerSpawnPoint } {
+Game::Game(sf::RenderWindow* win) : levelEditor{ &walls, &enemiesSpawnPoint, &playerSpawnPoint }, player(&walls, &entities, &enemies) {
 	this->win = win;
 	bg = sf::RectangleShape(Vector2f((float)win->getSize().x, (float)win->getSize().y));
 
@@ -50,9 +50,7 @@ Game::Game(sf::RenderWindow* win) : levelEditor{ &walls, &enemiesSpawnPoint, &pl
 
 	////Player Setup
 	//playerSpawnPoint = sf::Vector2i{ 10, lastLine - 1 };
-	player.wallsPosition = &walls;
-	player.enemies = &enemies;
-	playerResetPosition();
+	player.setPosition(playerSpawnPoint);
 
 	entities.push_back(&player);
 
@@ -101,19 +99,6 @@ void Game::processInput(sf::Event ev) {
 
 	if (ev.type == sf::Event::MouseButtonPressed && ev.mouseButton.button == sf::Mouse::Left) {
 		player.shoot();
-	}
-
-	//Miss controller input
-
-	if (ev.type == sf::Event::MouseButtonPressed && ev.mouseButton.button == sf::Mouse::Right) {
-		HomingMissile* missile = player.shootMissile();
-		entities.push_back(missile);
-
-		//This is very wrong, but you say dirty code soooo
-		auto missileIterator = std::prev(entities.end());
-		missile->missileWillBeClear = [this, missileIterator]() {
-			this->entities.erase(missileIterator);
-		};
 	}
 }
 
@@ -304,6 +289,7 @@ void Game::spawnEnemies() {
 
 	entities.clear();
 	entities.push_back(&player);
+	entities.push_back(&player.petDrone);
 
 	for (sf::Vector2i position : enemiesSpawnPoint) {
 		Enemy* newEnemy = new Enemy{};
@@ -313,11 +299,6 @@ void Game::spawnEnemies() {
 		enemies.push_back(newEnemy);
 		entities.push_back(newEnemy);
 	}
-}
-
-void Game::playerResetPosition() {
-	player.cx = playerSpawnPoint.x;
-	player.cy = playerSpawnPoint.y;
 }
 
 
@@ -330,7 +311,7 @@ void Game::trackPlayerStats() {
 		ImGui::LabelText("Player X Speed", "%f", player.dx);
 		ImGui::LabelText("Player Y Pos", "%f", player.dy);
 		if (ImGui::Button("Reset Player Position")) {
-			playerResetPosition();
+			player.setPosition(playerSpawnPoint);
 		}
 	}
 }
@@ -346,6 +327,6 @@ void Game::manageLevelEditor() {
 void Game::updateLevel() {
 	cacheWalls();
 	spawnEnemies();
-	playerResetPosition();
+	player.setPosition(playerSpawnPoint);
 	jsonTool.savelLevel(levelPath, walls, enemiesSpawnPoint, playerSpawnPoint);
 }

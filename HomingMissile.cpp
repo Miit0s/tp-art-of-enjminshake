@@ -68,6 +68,7 @@ void HomingMissile::update(double deltaTime)
 	dx = direction.x * speed;
 	dy = direction.y * speed;
 
+	//Rotation logic
 	float radians = std::atan2(dy, dx);
 	float degrees = radians * (180.0f / 3.14f);
 

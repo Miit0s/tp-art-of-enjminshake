@@ -1,9 +1,13 @@
 #include "Player.hpp"
 
-#include <random>
-
-Player::Player() {
+Player::Player(std::vector<sf::Vector2i>* wallsPositionPtr, std::list<Entity*>* entitiesListPtr, std::vector<Enemy*>* enemiesVectorPtr) : petDrone(this, enemiesVectorPtr, entitiesListPtr) {
 	tweenMaker = TweenMaker::getInstance();
+
+	this->entitiesListPtr = entitiesListPtr;
+	this->wallsPositionPtr = wallsPositionPtr;
+	this->enemiesVectorPtr = enemiesVectorPtr;
+
+	entitiesListPtr->push_back(&petDrone);
 }
 
 Player::~Player()
@@ -22,7 +26,7 @@ void Player::shoot() {
 	for (int i = 1; i <= maxLaserRange; i++) {
 		int checkX{ cx + (i * step) };
 
-		for (sf::Vector2i wallPosition : *wallsPosition) {
+		for (sf::Vector2i wallPosition : *wallsPositionPtr) {
 			if (wallPosition.x == checkX && wallPosition.y == startPosition.y) {
 				hitPosition.x = checkX;
 				hitFound = true;
@@ -32,7 +36,7 @@ void Player::shoot() {
 
 		if (hitFound) break;
 
-		for (Enemy* enemy : *enemies) {
+		for (Enemy* enemy : *enemiesVectorPtr) {
 			if (enemy->cx == checkX && enemy->cy == startPosition.y && !enemy->isDead) {
 				hitPosition.x = checkX;
 				hitPosition.x += (currentDirection == left) ? -1 : 2;
@@ -69,44 +73,23 @@ void Player::shoot() {
 	};
 }
 
-HomingMissile* Player::shootMissile()
+void Player::setPosition(sf::Vector2i newPosition)
 {
-	std::vector<Enemy*> aliveEnemies;
-	std::copy_if(enemies->begin(), enemies->end(), std::back_inserter(aliveEnemies), [](Enemy* enemy) {
-		return enemy != nullptr && !enemy->isDead;
-	});
-
-	static std::mt19937 gen(std::random_device{}());
-
-	if (aliveEnemies.empty()) {
-		std::uniform_int_distribution<int> dist(0, 10);
-
-		return &homingMissiles.emplace_back(HomingMissile{ sf::Vector2i{cx, cy}, sf::Vector2i{40 + dist(gen), 20 + dist(gen)}, enemies });
-	}
-
-	std::uniform_int_distribution<size_t> dist(0, aliveEnemies.size() - 1);
-
-	Enemy* target = aliveEnemies[dist(gen)];
-
-	return &homingMissiles.emplace_back(HomingMissile{ sf::Vector2i{cx, cy}, target, enemies });
-	//Tween* tweenCreated = tweenMaker->startTween(&newMissile.sprite, &enemies->front()->sprite, 5);
+	cx = newPosition.x;
+	cy = newPosition.y;
+	petDrone.tpToEntity();
 }
 
 void Player::update(double deltaTime) {
-	if (dx > 0) currentDirection = right;
-	else currentDirection = left;
+	if (dx > 0) setCurrentDirection(right);
+	else setCurrentDirection(left);
 
-	for (auto iterator = homingMissiles.begin(); iterator != homingMissiles.end();)
-	{
-		iterator->update(deltaTime);
-
-		if (iterator->isDead) iterator = homingMissiles.erase(iterator);
-		else ++iterator;
-	}
+	petDrone.update(deltaTime);
 }
 
 void Player::drawn(sf::RenderWindow& window) {
 	for (sf::RectangleShape& laser : lasersSprite)
 		window.draw(laser);
 
+	petDrone.drawn(window);
 }

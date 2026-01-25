@@ -77,7 +77,6 @@ private:
 	void trackPlayerStats();
 	void manageLevelEditor();
 	void spawnEnemies();
-	void playerResetPosition();
 
 	TweenMaker* tweenMaker;
 };

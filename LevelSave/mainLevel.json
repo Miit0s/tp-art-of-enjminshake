@@ -1,5 +1,5 @@
 {
-	"playerSpawnPoint": {"x":10,"y":54},
+	"playerSpawnPoint": {"x":26,"y":47},
 	"enemiesSpawnPoint": [
 	{"x":70,"y":0},
 	{"x":75,"y":0}
