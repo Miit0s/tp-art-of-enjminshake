@@ -49,10 +49,10 @@ void Enemy::hit() {
 }
 
 void Enemy::makeHitEffect() {
-	Tween* tweenCreated = tweenMaker->startTween(&sprite, sprite.getSize(), sf::Color{255, 255, 255, 255}, 0.1);
+	Tween* tweenCreated = tweenMaker->startTween(&sprite, sprite.getSize(), sf::Color{255, 255, 255, 255}, 0.1, false);
 
 	tweenCreated->tweenFinishCallback = [this]() {
-		this->tweenMaker->startTween(&sprite, sprite.getSize(), baseColor, 0.1);
+		this->tweenMaker->startTween(&sprite, sprite.getSize(), baseColor, 0.1, false);
 	};
 }
 
@@ -62,5 +62,5 @@ void Enemy::makeDeathEffect() {
 	dy -= upForceWhenDead;
 	dx += (currentDirection == left) ? horizontalForceWhenDead : -horizontalForceWhenDead;
 
-	Tween* tweenCreated = tweenMaker->startTween(&sprite, sprite.getSize(), sf::Color{ 255, 0, 0, 100 }, 0.1);
+	Tween* tweenCreated = tweenMaker->startTween(&sprite, sprite.getSize(), sf::Color{ 255, 0, 0, 100 }, 0.1, false);
 }

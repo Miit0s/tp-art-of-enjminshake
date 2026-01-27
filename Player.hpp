@@ -29,7 +29,10 @@ private:
     float laserHeight{ 0.5 };
     int maxLaserRange{ 100 };
 
+    sf::Vector2f muzzleOffset{ -0.5f, 0.5f };
+
     std::list<sf::RectangleShape> lasersSprite = {};
+    std::list<sf::RectangleShape> muzzlesSprite = {};
 
     enum Direction {
         left,

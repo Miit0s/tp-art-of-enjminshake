@@ -16,6 +16,8 @@ struct Tween
 	sf::Vector2f startPosition;
 	sf::RectangleShape* movingEndPosition = nullptr;
 
+	bool centerAnchor{ false };
+
 	double duration;
 	double timeElapsed{ 0 };
 

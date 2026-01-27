@@ -12,7 +12,7 @@ TweenMaker* TweenMaker::getInstance() {
     return instancePtr;
 }
 
-Tween* TweenMaker::startTween(sf::RectangleShape* shape, sf::Vector2f targetSize, sf::Color targetColor, double duration) {
+Tween* TweenMaker::startTween(sf::RectangleShape* shape, sf::Vector2f targetSize, sf::Color targetColor, double duration, bool centerAnchor) {
     Tween newTween{};
     newTween.target = shape;
     newTween.duration = duration;
@@ -24,6 +24,8 @@ Tween* TweenMaker::startTween(sf::RectangleShape* shape, sf::Vector2f targetSize
     newTween.endColor = targetColor;
 
     newTween.startPosition = shape->getPosition();
+
+    newTween.centerAnchor = centerAnchor;
 
     return &activeTweens.emplace_back(newTween);
 }
@@ -61,6 +63,9 @@ void TweenMaker::update(double deltaTime) {
         //Size
         sf::Vector2f currentSize = tween.startSize + (tween.endSize - tween.startSize) * completionPercentage;
         tween.target->setSize(currentSize);
+
+        //Anchor
+        if (tween.centerAnchor) tween.target->setOrigin(currentSize.x / 2.0f, currentSize.y / 2.0f);
 
         //Color
         sf::Uint8 red = tween.startColor.r + (sf::Uint8)((tween.endColor.r - tween.startColor.r) * completionPercentage);

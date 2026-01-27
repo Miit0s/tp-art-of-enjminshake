@@ -51,6 +51,7 @@ void Player::shoot() {
 		hitPosition.x = checkX;
 	}
 
+	//Laser creation
 	float distance = (currentDirection == right) ? abs(hitPosition.x - startPosition.x - 1) : abs(hitPosition.x - startPosition.x);
 
 	lasersSprite.emplace_back(sf::Vector2f(distance * C::GRID_SIZE, laserHeight * C::GRID_SIZE));
@@ -65,11 +66,29 @@ void Player::shoot() {
 
 	createdLaser.setFillColor(sf::Color{ 255, 20, 20, 255 });
 
-	Tween* tweenCreated = tweenMaker->startTween(&createdLaser, sf::Vector2{ distance * C::GRID_SIZE, 0.0f }, sf::Color{ 255, 255, 255, 0 }, 1);
+	Tween* tweenCreated = tweenMaker->startTween(&createdLaser, sf::Vector2{ distance * C::GRID_SIZE, 0.0f }, sf::Color{ 255, 255, 255, 0 }, 1, false);
 	auto laserIterator = std::prev(lasersSprite.end());
 
 	tweenCreated->tweenFinishCallback = [this, laserIterator]() {
 		this->lasersSprite.erase(laserIterator);
+	};
+
+	//Muzzle
+	muzzlesSprite.emplace_back(sf::RectangleShape{sf::Vector2f{C::GRID_SIZE * 2, C::GRID_SIZE * 2}});
+	sf::RectangleShape& createdMuzzle = muzzlesSprite.back();
+
+	if (currentDirection == left)
+		createdMuzzle.setPosition(sf::Vector2f{ (cx + xr + muzzleOffset.x) * C::GRID_SIZE, (cy + yr + muzzleOffset.y) * C::GRID_SIZE });
+	else
+		createdMuzzle.setPosition(sf::Vector2f{ (cx + xr + (muzzleOffset.x) * -2.5f) * C::GRID_SIZE, (cy + yr + muzzleOffset.y) * C::GRID_SIZE });
+
+	createdMuzzle.setFillColor(sf::Color{ 255,0,0,255 });
+
+	Tween* tweenForMuzzle = tweenMaker->startTween(&createdMuzzle, sf::Vector2f{ 0.0f, 0.0f }, sf::Color{ 255,255,255,255 }, 0.2, true);
+	auto muzzleIterator = std::prev(muzzlesSprite.end());
+
+	tweenCreated->tweenFinishCallback = [this, muzzleIterator]() {
+		this->muzzlesSprite.erase(muzzleIterator);
 	};
 }
 
@@ -90,6 +109,9 @@ void Player::update(double deltaTime) {
 void Player::drawn(sf::RenderWindow& window) {
 	for (sf::RectangleShape& laser : lasersSprite)
 		window.draw(laser);
+
+	for (sf::RectangleShape& muzzle : muzzlesSprite)
+		window.draw(muzzle);
 
 	petDrone.drawn(window);
 }
