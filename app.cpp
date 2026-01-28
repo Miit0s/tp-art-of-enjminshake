@@ -163,7 +163,7 @@ int main()
 		}
 		g.im();
 
-        g.draw(window);
+        g.draw(window, v);
 
 		window.draw(fpsCounter);
 
