@@ -114,14 +114,12 @@ void Game::pollInput(double dt) {
 	float deadzone = 20.0f;
 	int controllerID = 0;
 
-	float moveToAddToPlayer = 0;
-
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q)) {
-		moveToAddToPlayer = -player.speed;
+		player.moveLeft();
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
-		moveToAddToPlayer = player.speed;
+		player.moveRight();
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) || sf::Joystick::isButtonPressed(controllerID, 1)) {
@@ -143,11 +141,9 @@ void Game::pollInput(double dt) {
 	if (sf::Joystick::isConnected(controllerID)) {
 		float xPos = sf::Joystick::getAxisPosition(controllerID, sf::Joystick::X);
 
-		if (xPos > deadzone) moveToAddToPlayer = player.speed * (abs(xPos) / 100);
-		if (xPos < -deadzone) moveToAddToPlayer = -(player.speed * (abs(xPos) / 100));
+		if (xPos > deadzone) player.moveRight(player.speed * (abs(xPos) / 100));
+		if (xPos < -deadzone) player.moveLeft(player.speed * (abs(xPos) / 100));
 	}
-
-	player.dx += moveToAddToPlayer;
 }
 
 static sf::VertexArray va;

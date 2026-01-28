@@ -90,6 +90,8 @@ void Player::shoot() {
 	tweenCreated->tweenFinishCallback = [this, muzzleIterator]() {
 		this->muzzlesSprite.erase(muzzleIterator);
 	};
+
+	dx += (currentDirection == left) ? recoilForce : -recoilForce;
 }
 
 void Player::setPosition(sf::Vector2i newPosition)
@@ -99,9 +101,25 @@ void Player::setPosition(sf::Vector2i newPosition)
 	petDrone.tpToEntity();
 }
 
+void Player::moveLeft(float force)
+{
+	if (force == 0) movementToAdd += -speed;
+	else movementToAdd += -force;
+
+	setCurrentDirection(left);
+}
+
+void Player::moveRight(float force)
+{
+	if (force == 0) movementToAdd += speed;
+	else  movementToAdd += force;
+
+	setCurrentDirection(right);
+}
+
 void Player::update(double deltaTime) {
-	if (dx > 0) setCurrentDirection(right);
-	else setCurrentDirection(left);
+	dx += movementToAdd;
+	movementToAdd = 0;
 
 	petDrone.update(deltaTime);
 }
