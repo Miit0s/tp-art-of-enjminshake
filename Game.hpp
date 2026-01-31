@@ -28,6 +28,7 @@ public:
 	HotReloadShader *				bgShader = nullptr;
 
 	sf::Texture						tex;
+	sf::Texture						wallTexture;
 
 	bool							closing = false;
 	

@@ -4,7 +4,10 @@ Enemy::Enemy()
 {
 	sprite.setOrigin(0, 0);
 	sprite.setSize({ C::GRID_SIZE, C::GRID_SIZE });
-	sprite.setFillColor(baseColor);
+	//sprite.setFillColor(baseColor);
+
+	texture.loadFromFile("res/monster_sprite.PNG");
+	sprite.setTexture(&texture);
 
 	tweenMaker = TweenMaker::getInstance();
 }
@@ -49,7 +52,7 @@ void Enemy::hit() {
 }
 
 void Enemy::makeHitEffect() {
-	Tween* tweenCreated = tweenMaker->startTween(&sprite, sprite.getSize(), sf::Color{255, 255, 255, 255}, 0.1, false);
+	Tween* tweenCreated = tweenMaker->startTween(&sprite, sprite.getSize(), sf::Color{255, 0, 0, 255}, 0.1, false);
 
 	tweenCreated->tweenFinishCallback = [this]() {
 		this->tweenMaker->startTween(&sprite, sprite.getSize(), baseColor, 0.1, false);
@@ -62,5 +65,5 @@ void Enemy::makeDeathEffect() {
 	dy -= upForceWhenDead;
 	dx += (currentDirection == left) ? horizontalForceWhenDead : -horizontalForceWhenDead;
 
-	Tween* tweenCreated = tweenMaker->startTween(&sprite, sprite.getSize(), sf::Color{ 255, 0, 0, 100 }, 0.1, false);
+	Tween* tweenCreated = tweenMaker->startTween(&sprite, sprite.getSize(), sf::Color{ 255, 255, 255, 100 }, 0.1, false);
 }

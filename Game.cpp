@@ -15,7 +15,7 @@ Game::Game(sf::RenderWindow* win) : levelEditor{ &walls, &enemiesSpawnPoint, &pl
 	this->win = win;
 	bg = sf::RectangleShape(Vector2f((float)win->getSize().x, (float)win->getSize().y));
 
-	bool isOk = tex.loadFromFile("res/bg_stars.png");
+	bool isOk = tex.loadFromFile("res/sci_fi_bg.jpg");
 	if (!isOk) {
 		printf("ERR : LOAD FAILED\n");
 	}
@@ -73,7 +73,12 @@ void Game::cacheWalls()
 	for (Vector2i & w : walls) {
 		sf::RectangleShape rect(Vector2f(16,16));
 		rect.setPosition((float)w.x * C::GRID_SIZE, (float)w.y * C::GRID_SIZE);
-		rect.setFillColor(sf::Color(0x07ff07ff));
+		rect.setSize({ C::GRID_SIZE, C::GRID_SIZE });
+		rect.setFillColor(sf::Color{ 128, 128,128, 255 });
+
+		wallTexture.loadFromFile("res/wall_sprite_1.png");
+		rect.setTexture(&wallTexture);
+		
 		wallSprites.push_back(rect);
 	}
 }

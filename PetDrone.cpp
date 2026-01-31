@@ -10,6 +10,9 @@ PetDrone::PetDrone(Entity* entityToFollow, std::vector<Enemy*>* enemiesVectorPtr
 	this->enemiesVectorPtr = enemiesVectorPtr;
 	this->entitiesListPtr = entitiesListPtr;
 
+	texture.loadFromFile("res/pet_drone_sprite.PNG");
+	sprite.setTexture(&texture);
+
 	tpToEntity();
 }
 

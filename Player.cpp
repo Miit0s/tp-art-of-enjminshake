@@ -8,6 +8,12 @@ Player::Player(std::vector<sf::Vector2i>* wallsPositionPtr, std::list<Entity*>* 
 	this->enemiesVectorPtr = enemiesVectorPtr;
 
 	entitiesListPtr->push_back(&petDrone);
+
+	texture.loadFromFile("res/player_sprite.PNG");
+	sprite.setTexture(&texture);
+
+	sf::FloatRect bounds = sprite.getLocalBounds();
+	sprite.setOrigin(bounds.width / 2.0f, 0);
 }
 
 Player::~Player()

@@ -10,6 +10,7 @@ public:
 	~Entity();
 
 	sf::RectangleShape sprite;
+	sf::Texture	texture;
 
 	void update(double deltaTime);
 	void drawn(sf::RenderWindow& window);
@@ -28,8 +29,8 @@ public:
 	float xr{};
 	float yr{};
 
-	float speed{ 1 };
-	float jumpForce{ 50 };
+	float speed{ 0.5f };
+	float jumpForce{ 30 };
 
 	//Gravity
 	bool applyGravity{ true };

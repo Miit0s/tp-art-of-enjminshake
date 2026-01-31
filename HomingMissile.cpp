@@ -9,6 +9,9 @@ HomingMissile::HomingMissile(sf::Vector2i startPosition, Entity* entityPtr, std:
 	this->enemies = enemies;
 
 	applyGravity = false;
+
+	sprite.setTexture(&getSharedTexture());
+	sprite.setSize({ C::GRID_SIZE / 1.3, C::GRID_SIZE / 1.3 });
 }
 
 HomingMissile::HomingMissile(sf::Vector2i startPosition, sf::Vector2i endPosition, std::vector<Enemy*>* enemies)
@@ -20,9 +23,23 @@ HomingMissile::HomingMissile(sf::Vector2i startPosition, sf::Vector2i endPositio
 	this->enemies = enemies;
 
 	applyGravity = false;
+
+	sprite.setTexture(&getSharedTexture());
+	sprite.setSize({ C::GRID_SIZE / 1.3, C::GRID_SIZE / 1.3 });
 }
 
 HomingMissile::~HomingMissile() = default;
+
+sf::Texture& HomingMissile::getSharedTexture()
+{
+	static sf::Texture texture;
+
+	if (texture.getSize().x == 0) {
+		texture.loadFromFile("res/missile_sprite.PNG");
+	}
+
+	return texture;
+}
 
 void HomingMissile::update(double deltaTime)
 {

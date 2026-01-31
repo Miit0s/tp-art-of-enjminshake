@@ -23,10 +23,12 @@ private:
 
     std::vector<Enemy*>* enemies;
 
-    float invincibilityDuration{ 0.5f };
-    float speed{ 30.0f };
+    float invincibilityDuration{ 0.2f };
+    float speed{ 10.0f };
     double timeElasped{ 0 };
     bool isInvincible{ true };
+
+    static sf::Texture& getSharedTexture();
 
     void destroy();
 };

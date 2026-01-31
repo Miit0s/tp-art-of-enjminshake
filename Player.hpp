@@ -49,6 +49,9 @@ private:
     {
         if (currentDirection != newDirection) petDrone.switchSide();
 
+        if (newDirection == left) sprite.setScale(-1.f, 1.f);
+        else sprite.setScale(1.f, 1.f);
+
 	    currentDirection = newDirection;
     }
 

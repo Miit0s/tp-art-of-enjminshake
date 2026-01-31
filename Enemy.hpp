@@ -16,10 +16,10 @@ public:
 private:
 	int life{ 5 };
 
-	float upForceWhenDead{ 20 };
-	float horizontalForceWhenDead{ 60 };
+	float upForceWhenDead{ 10 };
+	float horizontalForceWhenDead{ 30 };
 
-	sf::Color baseColor{ 255, 0, 0, 255 };
+	sf::Color baseColor{ 255, 255, 255, 255 };
 
 	TweenMaker* tweenMaker;
 
