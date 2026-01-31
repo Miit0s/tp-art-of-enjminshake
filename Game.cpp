@@ -271,26 +271,59 @@ void Game::processCollision() {
 		entity.isCollidingOnX = false;
 		entity.isCollidingOnY = false;
 
+		//Marge pour éviter bug flottant
+		float epsilon = 0.001f;
+
+		bool overlapX = entity.xr > epsilon;
+		bool overlapY = entity.yr > epsilon;
+
 		//Collision Sol
-		if (entity.dy >= 0 && isWall(entity.cx, entity.cy + 1)) { 
-			entity.isCollidingOnY = true;
-			entity.yr = 0;
+		if (entity.dy >= 0)
+		{
+			bool floorLeft = isWall(entity.cx, entity.cy + 1);
+			bool floorRight = overlapX && isWall(entity.cx + 1, entity.cy + 1);
+
+			if (floorLeft || floorRight) {
+				entity.isCollidingOnY = true;
+				entity.yr = 0;
+			}
 		}
 
 		//Collision Plafond
-		if (entity.dy < 0 && isWall(entity.cx, entity.cy - 1)) { 
-			entity.isCollidingOnY = true; 
-			entity.yr = 0;
+		if (entity.dy < 0)
+		{
+			bool ceilLeft = isWall(entity.cx, entity.cy - 1);
+			bool ceilRight = overlapX && isWall(entity.cx + 1, entity.cy - 1);
+
+			if (ceilLeft || ceilRight) {
+				entity.isCollidingOnY = true;
+				entity.yr = 0;
+			}
 		}
 
 		//Collision mur
-		if (entity.dx > 0 && isWall(entity.cx + 1, entity.cy)) { 
-			entity.isCollidingOnX = true; 
-			entity.xr = 0;
+		//Droit
+		if (entity.dx > 0)
+		{
+			bool wallTop = isWall(entity.cx + 1, entity.cy);
+			bool wallBot = overlapY && isWall(entity.cx + 1, entity.cy + 1);
+
+			if (wallTop || wallBot) {
+				entity.isCollidingOnX = true;
+				entity.xr = 0;
+			}
 		}
-		if (entity.dx < 0 && isWall(entity.cx - 1, entity.cy)) { 
-			entity.isCollidingOnX = true;
-			entity.xr = 0;
+
+		//Gauche
+		if (entity.dx < 0)
+		{
+			bool wallTop = isWall(entity.cx - 1, entity.cy);
+			bool wallBot = overlapY && isWall(entity.cx - 1, entity.cy + 1);
+
+			if ((wallTop || wallBot) && entity.xr < 0.3) {
+				entity.isCollidingOnX = true;
+				entity.xr = 0;
+			}
 		}
 	}
 }
