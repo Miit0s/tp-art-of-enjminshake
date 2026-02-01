@@ -127,6 +127,13 @@ void Player::update(double deltaTime) {
 	dx += movementToAdd;
 	movementToAdd = 0;
 
+	//Fix car joueur au centre pour flip facilement le sprite
+	float pixelX = (this->cx + this->xr) * C::GRID_SIZE;
+	float pixelY = (this->cy + this->yr) * C::GRID_SIZE;
+
+	float halfWidth = sprite.getLocalBounds().width / 2.0f;
+	sprite.setPosition(pixelX + halfWidth, pixelY);
+
 	petDrone.update(deltaTime);
 }
 

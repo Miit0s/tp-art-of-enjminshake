@@ -84,6 +84,7 @@ void Game::cacheWalls()
 }
 
 void Game::processInput(sf::Event ev) {
+
 	if (ev.type == sf::Event::Closed) {
 		win->close();
 		closing = true;
@@ -291,6 +292,8 @@ void Game::processCollision() {
 			if (floorLeft || floorRight) {
 				entity.isCollidingOnY = true;
 				entity.yr = 0;
+
+				overlapY = false;
 			}
 		}
 
@@ -303,6 +306,8 @@ void Game::processCollision() {
 			if (ceilLeft || ceilRight) {
 				entity.isCollidingOnY = true;
 				entity.yr = 0;
+
+				overlapY = false;
 			}
 		}
 

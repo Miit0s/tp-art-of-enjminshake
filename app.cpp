@@ -103,6 +103,7 @@ int main()
 			dt = 0.00000001;
 		}
 
+		//Fix for when the windows is move
 		if (dt > 0.1) {
 			dt = 0.1;
 		}
