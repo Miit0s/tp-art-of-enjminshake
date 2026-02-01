@@ -30,7 +30,7 @@ public:
 	float yr{};
 
 	float speed{ 0.5f };
-	float jumpForce{ 30 };
+	float jumpForce{ 40 };
 
 	//Gravity
 	bool applyGravity{ true };

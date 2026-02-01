@@ -100,6 +100,8 @@ void Game::processInput(sf::Event ev) {
 		}
 	}
 
+	if (showLevelEditorWindows) return;
+
 	if (ev.type == sf::Event::JoystickButtonPressed && ev.joystickButton.button == 5) {
 		player.shoot();
 		cameraShaker->shakeCamera();
@@ -174,8 +176,9 @@ void Game::update(double dt) {
 		player.update(dt);
 
 		tweenMaker->update(dt);
-		cameraShaker->update(dt);
 	}
+
+	cameraShaker->update(dt);
 
 	g_time += dt;
 	if (bgShader) bgShader->update(dt);

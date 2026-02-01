@@ -37,9 +37,9 @@ void PetDrone::shootMissile()
 	static std::mt19937 gen(std::random_device{}());
 
 	if (aliveEnemies.empty()) {
-		std::uniform_int_distribution<int> dist(0, 10);
+		std::uniform_int_distribution<int> dist(0, 5);
 
-		HomingMissile* newMissile = &homingMissiles.emplace_back(HomingMissile{ sf::Vector2i{cx, cy}, sf::Vector2i{40 + dist(gen), 20 + dist(gen)}, enemiesVectorPtr });
+		HomingMissile* newMissile = &homingMissiles.emplace_back(HomingMissile{ sf::Vector2i{cx, cy}, sf::Vector2i{20 + dist(gen), 5 + dist(gen)}, enemiesVectorPtr });
 		setupNewMissile(newMissile);
 
 		return;
