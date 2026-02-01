@@ -9,6 +9,7 @@ Player::Player(std::vector<sf::Vector2i>* wallsPositionPtr, std::list<Entity*>* 
 
 	entitiesListPtr->push_back(&petDrone);
 
+	muzzleTexture.loadFromFile("res/circle_explosion.PNG");
 	texture.loadFromFile("res/player_sprite.PNG");
 	sprite.setTexture(&texture);
 
@@ -89,11 +90,12 @@ void Player::shoot() {
 		createdMuzzle.setPosition(sf::Vector2f{ (cx + xr + (muzzleOffset.x) * -2.5f) * C::GRID_SIZE, (cy + yr + muzzleOffset.y) * C::GRID_SIZE });
 
 	createdMuzzle.setFillColor(sf::Color{ 255,0,0,255 });
+	createdMuzzle.setTexture(&muzzleTexture);
 
 	Tween* tweenForMuzzle = tweenMaker->startTween(&createdMuzzle, sf::Vector2f{ 0.0f, 0.0f }, sf::Color{ 255,255,255,255 }, 0.2, true);
 	auto muzzleIterator = std::prev(muzzlesSprite.end());
 
-	tweenCreated->tweenFinishCallback = [this, muzzleIterator]() {
+	tweenForMuzzle->tweenFinishCallback = [this, muzzleIterator]() {
 		this->muzzlesSprite.erase(muzzleIterator);
 	};
 

@@ -93,3 +93,11 @@ void PetDrone::update(double deltaTime)
 		timeElapsed = 0;
 	}
 }
+
+void PetDrone::drawn(sf::RenderWindow& window)
+{
+	for (auto& missile : homingMissiles)
+	{
+		missile.drawn(window);
+	}
+}

@@ -65,6 +65,7 @@ Game::Game(sf::RenderWindow* win) : levelEditor{ &walls, &enemiesSpawnPoint, &pl
 	};
 
 	tweenMaker = TweenMaker::getInstance();
+	cameraShaker = CameraShaker::getInstance();
 }
 
 void Game::cacheWalls()
@@ -101,12 +102,12 @@ void Game::processInput(sf::Event ev) {
 
 	if (ev.type == sf::Event::JoystickButtonPressed && ev.joystickButton.button == 5) {
 		player.shoot();
-		shakeCamera();
+		cameraShaker->shakeCamera();
 	}
 
 	if (ev.type == sf::Event::MouseButtonPressed && ev.mouseButton.button == sf::Mouse::Left) {
 		player.shoot();
-		shakeCamera();
+		cameraShaker->shakeCamera();
 	}
 }
 
@@ -173,6 +174,7 @@ void Game::update(double dt) {
 		player.update(dt);
 
 		tweenMaker->update(dt);
+		cameraShaker->update(dt);
 	}
 
 	g_time += dt;
@@ -183,12 +185,6 @@ void Game::update(double dt) {
 
 	trackPlayerStats();
 	manageLevelEditor();
-
-	if (currentShakeTime > 0) {
-		currentShakeTime -= dt;
-
-		if (currentShakeTime < 0) currentShakeTime = 0;
-	}
 }
 
  void Game::draw(sf::RenderWindow& win, sf::View& view) {
@@ -225,28 +221,10 @@ void Game::update(double dt) {
 		levelEditor.drawLevelEditorGui(&showLevelEditorWindows);
 	}
 
-	processCameraShake(&view);
+	cameraShaker->processCameraShake(&view);
 }
 
- void Game::shakeCamera()
- {
-	 currentShakeTime = shakeDuration;
- }
 
- void Game::processCameraShake(sf::View* view)
- {
-	 view->setCenter(view->getSize().x / 2, view->getSize().y / 2);
-
-	 if (currentShakeTime > 0) {
-		
-		 float dampFactor = currentShakeTime / shakeDuration;
-
-		 float offsetX = randomFloat(-1.0f, 1.0f) * shakeMagnitude * dampFactor;
-		 float offsetY = randomFloat(-1.0f, 1.0f) * shakeMagnitude * dampFactor;
-
-		 view->move(offsetX, offsetY);
-	 }
- }
 
 void Game::onSpacePressed() {
 	
@@ -398,9 +376,4 @@ void Game::updateLevel() {
 	spawnEnemies();
 	player.setPosition(playerSpawnPoint);
 	jsonTool.savelLevel(levelPath, walls, enemiesSpawnPoint, playerSpawnPoint);
-}
-
-float Game::randomFloat(float min, float max)
-{
-	return min + (float)(rand() / (float)(RAND_MAX / (max - min)));
 }

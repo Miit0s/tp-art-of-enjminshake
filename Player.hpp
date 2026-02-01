@@ -33,6 +33,8 @@ private:
     int maxLaserRange{ 100 };
     float recoilForce{ 50 };
 
+    sf::Texture	muzzleTexture;
+
     sf::Vector2f muzzleOffset{ -0.5f, 0.5f };
 
     std::list<sf::RectangleShape> lasersSprite = {};

@@ -28,5 +28,6 @@ public:
     void switchSide();
 
     void update(double deltaTime);
+    void drawn(sf::RenderWindow& window);
 };
 

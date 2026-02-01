@@ -5,9 +5,7 @@ TweenMaker* TweenMaker::instancePtr = nullptr;
 //Not thread safe, but not needed for the moment
 TweenMaker* TweenMaker::getInstance() {
     if (instancePtr == nullptr) {
-        if (instancePtr == nullptr) {
-            instancePtr = new TweenMaker();
-        }
+    	instancePtr = new TweenMaker();
     }
     return instancePtr;
 }

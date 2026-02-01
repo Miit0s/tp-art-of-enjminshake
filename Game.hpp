@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "CameraShaker.hpp"
 #include "SFML/Graphics.hpp"
 #include "SFML/System.hpp"
 #include "SFML/Window.hpp"
@@ -60,8 +61,6 @@ public:
 	void update(double dt);
 
 	void draw(sf::RenderWindow& win, sf::View& view);
-	void shakeCamera();
-	void processCameraShake(sf::View*);
 
 	bool isWall(int cx, int cy);
 	void im();
@@ -82,12 +81,5 @@ private:
 	void spawnEnemies();
 
 	TweenMaker* tweenMaker;
-
-	//Shake
-	float shakeDuration{ 0.2f };
-	float shakeMagnitude{ 2.0f };
-
-	double currentShakeTime{ 0.0f };
-
-	float randomFloat(float min, float max);
+	CameraShaker* cameraShaker;
 };

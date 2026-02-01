@@ -5,6 +5,8 @@
 
 #include <functional>
 
+#include "CameraShaker.hpp"
+
 class HomingMissile :
     public Entity
 {
@@ -14,22 +16,30 @@ public:
     ~HomingMissile();
 
     void update(double deltaTime);
+    void drawn(sf::RenderWindow& window);
 
     std::function<void()> missileWillBeClear;
 private:
     Entity* entityPtr = nullptr;
+    CameraShaker* cameraShaker;
 
     sf::Vector2i endPosition;
 
     std::vector<Enemy*>* enemies;
+    std::list<sf::RectangleShape> explosions = {};
 
     float invincibilityDuration{ 0.2f };
     float speed{ 10.0f };
     double timeElasped{ 0 };
     bool isInvincible{ true };
+    bool isExploding{ false };
 
     static sf::Texture& getSharedTexture();
+    sf::Texture	explosionTexture;
 
+    void explosionEffect();
     void destroy();
+
+    TweenMaker* tweenMaker;
 };
 

@@ -7,9 +7,12 @@ HomingMissile::HomingMissile(sf::Vector2i startPosition, Entity* entityPtr, std:
 
 	this->entityPtr = entityPtr;
 	this->enemies = enemies;
+	this->cameraShaker = CameraShaker::getInstance();
+	this->tweenMaker = TweenMaker::getInstance();
 
 	applyGravity = false;
 
+	explosionTexture.loadFromFile("res/circle_explosion.PNG");
 	sprite.setTexture(&getSharedTexture());
 	sprite.setSize({ C::GRID_SIZE / 1.3, C::GRID_SIZE / 1.3 });
 }
@@ -21,9 +24,12 @@ HomingMissile::HomingMissile(sf::Vector2i startPosition, sf::Vector2i endPositio
 
 	this->endPosition = endPosition;
 	this->enemies = enemies;
+	this->cameraShaker = CameraShaker::getInstance();
+	this->tweenMaker = TweenMaker::getInstance();
 
 	applyGravity = false;
 
+	explosionTexture.loadFromFile("res/circle_explosion.PNG");
 	sprite.setTexture(&getSharedTexture());
 	sprite.setSize({ C::GRID_SIZE / 1.3, C::GRID_SIZE / 1.3 });
 }
@@ -43,7 +49,7 @@ sf::Texture& HomingMissile::getSharedTexture()
 
 void HomingMissile::update(double deltaTime)
 {
-	if (isDead) return;
+	if (isDead or isExploding) return;
 
 	if (isInvincible)
 	{
@@ -51,12 +57,12 @@ void HomingMissile::update(double deltaTime)
 		if (timeElasped >= invincibilityDuration) isInvincible = false;
 	}
 
-	if ((isCollidingOnX || isCollidingOnY) && !isInvincible) destroy();
+	if ((isCollidingOnX || isCollidingOnY) && !isInvincible) explosionEffect();
 	
 	if (endPosition.x == cx + 1 || endPosition.x == cx - 1 || endPosition.x == cx)
 	{
 		if (endPosition.y == cy + 1 || endPosition.y == cy - 1 || endPosition.y == cy) {
-			destroy();
+			explosionEffect();
 		}
 	}
 
@@ -66,7 +72,7 @@ void HomingMissile::update(double deltaTime)
 			if (enemy->cy == cy + 1 || enemy->cy == cy - 1 || enemy->cy == cy) {
 
 				if (!enemy->isDead) enemy->hit();
-				destroy();
+				explosionEffect();
 			}
 		}
 	}
@@ -90,6 +96,34 @@ void HomingMissile::update(double deltaTime)
 	float degrees = radians * (180.0f / 3.14f);
 
 	sprite.setRotation(degrees);
+}
+
+void HomingMissile::drawn(sf::RenderWindow& window)
+{
+	for (sf::RectangleShape& explosion : explosions)
+		window.draw(explosion);
+}
+
+void HomingMissile::explosionEffect()
+{
+	isExploding = true;
+
+	explosions.emplace_back(sf::RectangleShape{ sf::Vector2f{C::GRID_SIZE * 3, C::GRID_SIZE * 3} });
+	sf::RectangleShape& explosion = explosions.back();
+
+	explosion.setPosition(sf::Vector2f{ (cx + xr) * C::GRID_SIZE, (cy + yr) * C::GRID_SIZE });
+	explosion.setFillColor(sf::Color{ 255,0,0,255 });
+	explosion.setTexture(&explosionTexture);
+
+	Tween* tweenForExplosion = tweenMaker->startTween(&explosion, sf::Vector2f{ 0.0f, 0.0f }, sf::Color{ 20,20,20,255 }, 0.5, true);
+
+	tweenForExplosion->tweenFinishCallback = [this]() {
+		this->destroy();
+	};
+
+	cameraShaker->shakeCamera();
+
+	sprite.setFillColor(sf::Color{ 255, 255, 255, 0 });
 }
 
 void HomingMissile::destroy()
